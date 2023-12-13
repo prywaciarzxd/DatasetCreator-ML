@@ -21,7 +21,7 @@ Execute script to find viruses and generate a CSV file:
 
     python find_viruses_csv.py --input_csv --output_txt
 
-Download APKs using the generated text file list:
+Download APKs using the generated text file list (you will need to add API_KEY in this file):
 
     python download_apks.py
 
