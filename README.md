@@ -23,7 +23,7 @@ Execute script to find viruses and generate a CSV file:
 
 Download APKs using the generated text file list (you will need to add API_KEY in this file):
 
-    python download_apks.py [--malware -> downloada malware --benign -> download benign apps]
+    python download_apks.py [options: --malware, --benign] 
 
 Run a script to check and execute the decompiling process:
 
