@@ -6,28 +6,28 @@ Installation Guide
     Clone the repository:
 
     bash
+    
+    git clone https://github.com/prywaciarzxd/DatasetCreator-ML.git
 
-git clone https://github.com/prywaciarzxd/DatasetCreator-ML.git
+
 
 Navigate to the cloned directory:
 
-bash
+    bash
 
-cd DatasetCreator-ML
+    cd DatasetCreator-ML
 
 Execute script to find viruses and generate a CSV file:
 
-css
-
-python find_viruses_csv.py --input_csv --output_txt
+    python find_viruses_csv.py --input_csv --output_txt
 
 Download APKs using the generated text file list:
 
-python download_apks.py
+    python download_apks.py
 
 Run a script to check and execute the decompiling process:
 
-python check_script.py
+    python check_script.py
 
 Extract features such as permissions and intents:
 
