@@ -33,6 +33,10 @@ Extract features such as permissions and intents:
 
     python extract_features
 
+You can train using dnn model by typing
+    
+    python dnn.py
+
 Module Explanation
 
     find_viruses_csv.py: Searches for files with a score higher than 25, classified as malware. You can adjust it to find benign files.
