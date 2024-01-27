@@ -1,74 +1,74 @@
 import os
 import subprocess
 import shutil
-import concurrent.futures
+import time
 
-def decompile_apk(file_path, output_dir):
-    try:
-        subprocess.run(["apktool", "d", file_path, "-o", output_dir], check=True)
-        return True
-    except subprocess.CalledProcessError as e:
-        print(f"Error decompiling APK {file_path}: {e}")
-        return False
-
-def move_manifest(apk_file, decompiled_dir, output_dir):
-    manifest_path = os.path.join(decompiled_dir, "AndroidManifest.xml")
-    if os.path.exists(manifest_path):
-        new_manifest_path = os.path.join(output_dir, f"AndroidManifest_{apk_file}.xml")
-        shutil.move(manifest_path, new_manifest_path)
-        print(f"Moved AndroidManifest.xml for {apk_file} to {new_manifest_path}")
-
+class ApkProcessor:
+    def __init__(self, home_directory, tool_directory, manifests_dir, decompile_dir, decompiled_apks_list):
+        self.home_directory = home_directory
+        self.tool_directory = tool_directory
+        self.manifests_dir = os.path.join(home_directory, tool_directory, manifests_dir)
+        self.decompile_dir = os.path.join(home_directory, tool_directory, decompile_dir)
+        self.decompiled_apks_list = os.path.join(home_directory, tool_directory, decompiled_apks_list)
         
+    
+    def decompile_apk(self, apk_file, decompiled_dir):
+        try:
+            if os.path.exists(decompiled_dir):
+                shutil.rmtree(decompiled_dir)
+            subprocess.run(["apktool", "d", apk_file, "-o", decompiled_dir], check=True)
+            return True
+        except subprocess.CalledProcessError as e:
+            print(f"Error decompiling APK {apk_file}: {e}")
+            os.remove(apk_file)
+            print(f"Removed APK file: {apk_file}")
+            return False
+    
+    def move_manifests(self, apk_file, decompiled_dir, manifests_dir):
+        manifest_path = os.path.join(decompiled_dir, "AndroidManifest.xml")
+        if os.path.exists(manifest_path):
+            new_manifest_path = os.path.join(decompiled_dir, f"AndroidManifest_{apk_file}.xml")
+            shutil.move(manifest_path, new_manifest_path)
+            print(f"Moved AndroidManifest.xml for {apk_file} to {new_manifest_path}")
 
-        # Usuń plik .apk
-        apk_path = os.path.join("/home/kali/Desktop/dataset_create_tool/benign", apk_file)
-        os.remove(apk_path)
-        print(f"Removed APK file: {apk_file}")
+            apk_path = os.path.join("/root/DatasetCreator-ML/benign", apk_file)
+            os.remove(apk_path)
+            print(f"Removed APK file: {apk_file}")
        
-    else:
-        print(f"No AndroidManifest.xml found for {apk_file}")
+        else:
+            print(f"No AndroidManifest.xml found for {apk_file}")
+        return 
+    
+    def process(self):
+        os.makedirs(self.manifests_dir, exist_ok=True)
 
-def decompile_and_move(apk_file, malware_path, manifests_dir, output_txt):
-    apk_path = os.path.join(malware_path, apk_file)
-    decompiled_dir = os.path.join(malware_path, f"{apk_file}_decompiled")
+        while True:
+            apk_files = [f for f in os.listdir(self.decompile_dir) if f.endswith(".apk")]
 
-    success = decompile_apk(apk_path, decompiled_dir)
+            if not apk_files:
+                print("No more APK files found. Exiting.")
+                break
 
-    if success:
-        move_manifest(apk_file, decompiled_dir, manifests_dir)
-        
-        with open(output_txt, 'a') as txt_file:
-            txt_file.write(f"{apk_file}\n")
+            for apk_file in apk_files:
+                apk_path = os.path.join(self.decompile_dir, apk_file)
+                decompiled_dir = os.path.join(self.decompile_dir, f"{apk_file}_decompiled")
 
-def process_apk(apk_file):
-    malware_path = "/home/kali/Desktop/dataset_create_tool/benign"
-    manifests_dir = "/home/kali/Desktop/dataset_create_tool/manifests"
+                success = self.decompile_apk(apk_path, decompiled_dir)
 
-    apk_path = os.path.join(malware_path, apk_file)
-    decompiled_dir = os.path.join(malware_path, f"{apk_file}_decompiled")
+                if success:
+                    self.move_manifests(apk_file, decompiled_dir, self.manifests_dir)
+            
+                    with open(self.decompiled_apks_list, 'a') as txt_file:
+                        txt_file.write(f"{apk_file}\n")
 
-    success = decompile_apk(apk_path, decompiled_dir)
-
-    if success:
-        move_manifest(apk_file, decompiled_dir, manifests_dir)
-
-        output_txt = "/home/kali/Desktop/dataset_create_tool/text_csv_files/benign_apk_list.txt"
-        with open(output_txt, 'a') as txt_file:
-            txt_file.write(f"{apk_file}\n")
-
-def main():
-    malware_path = "/home/kali/Desktop/dataset_create_tool/benign"
-
-    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
-        apk_files = [f for f in os.listdir(malware_path) if f.endswith(".apk")]
-
-        if not apk_files:
-            print("No more APK files found. Exiting.")
-            return
-
-        executor.map(process_apk, apk_files)
-
-        print("Processed APK files. Continuing the search.")
+            print("Processed APK files. Continuing the search.")
 
 if __name__ == "__main__":
-    main()
+    apk_processor = ApkProcessor(
+        home_directory=os.path.expanduser("~"),
+        tool_directory='DatasetCreator-ML',
+        manifests_dir="manifests",
+        decompile_dir="benign",
+        decompiled_apks_list="decompiled_apks.txt"
+    )
+    apk_processor.process()
