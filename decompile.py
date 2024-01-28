@@ -27,11 +27,11 @@ class ApkProcessor:
     def move_manifests(self, apk_file, decompiled_dir, manifests_dir):
         manifest_path = os.path.join(decompiled_dir, "AndroidManifest.xml")
         if os.path.exists(manifest_path):
-            new_manifest_path = os.path.join(decompiled_dir, f"AndroidManifest_{apk_file}.xml")
+            new_manifest_path = os.path.join(manifests_dir, f"AndroidManifest_{apk_file}.xml")
             shutil.move(manifest_path, new_manifest_path)
             print(f"Moved AndroidManifest.xml for {apk_file} to {new_manifest_path}")
 
-            apk_path = os.path.join("/root/DatasetCreator-ML/benign", apk_file)
+            apk_path = os.path.join(self.decompile_dir, apk_file)
             os.remove(apk_path)
             print(f"Removed APK file: {apk_file}")
        

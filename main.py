@@ -10,6 +10,9 @@ import time
 from download_apks import APKDownloader
 from find_viruses_csv import VirusFinder, parse_arguments_1
 from decompile import *
+from remove_decompiled_dirs import FolderManager
+from extract_features import ManifestProcessor
+from dnn import HyperparameterGridSearch
 
 class PrepareApksGUI:
 
@@ -17,8 +20,8 @@ class PrepareApksGUI:
         self.master = master
         master.title("DataSet Creator")
         
-        window_width = 400
-        window_height = 400
+        window_width = 500
+        window_height = 500
         screen_width = master.winfo_screenwidth()
         screen_height = master.winfo_screenheight()
         x = (screen_width - window_width) // 2
@@ -40,8 +43,14 @@ class PrepareApksGUI:
         self.button_decompile = tk.Button(master, text="Decompile APK files", command=self.ask_dir_decompile)
         self.button_decompile.pack(pady=10)
 
+        self.button_remove_dirs = tk.Button(master, text="Remove decompiled dirs", command=self.remove_dirs)
+        self.button_remove_dirs.pack(pady=10)
+
         self.button_extract = tk.Button(master, text="Extract static features", command=self.extract_features)
         self.button_extract.pack(pady=10)
+
+        self.button_dnn_model = tk.Button(master, text="Build DNN model", command=self.dnn)
+        self.button_dnn_model.pack(pady=10)
 
         self.button_quit = tk.Button(master, text="Quit", command=master.quit)
         self.button_quit.pack(pady=10)
@@ -49,21 +58,56 @@ class PrepareApksGUI:
         self.progress_bar = ttk.Progressbar(master, orient="horizontal", length=200, mode="determinate")
         self.progress_bar.pack(pady=10)
 
-        self.concurrent_downloads = 0
+        self.concurrent_downloads = 1
     
+    def remove_dirs(self):
+        removing_dir = simpledialog.askstring("Directory to delete decompiled folders", "Enter benign or malware: ", parent=self.master)
+        if removing_dir:
+            folder_manager = FolderManager(base_path=f'/root/DatasetCreator-ML/{removing_dir}')
+            folder_manager.delete_unused_decompiled_folders()
+        self.show_notification(f'Decompiled dirs has been removed!')
+
     def enter_api_key(self):
         api_key = simpledialog.askstring("API KEY", "Enter correct api key:", parent=self.master)
 
         os.environ["ZooDataSet"] = api_key
 
         self.show_notification(f"Your env variable has been set: {os.environ['ZooDataSet']}")
+    
+    def dnn(self):
+        dataset_path = simpledialog.askstring("DataSetPath", "Enter dataset absolute path", parent=self.master)
+        dnn_model = HyperparameterGridSearch(
+            data_path=dataset_path,
+            home_directory=os.path.expanduser("~"), 
+            tool_directory="DatasetCreator-ML",
+            results_file_path="dnn_results"
+        )
+        dnn_model.load_data()
+        dnn_model.preprocess_data()
+
+        optimizers = ['adam', 'sgd', 'rmsprop', 'adamax']
+        batch_sizes = [16, 32, 64]
+        epochs_values = [5, 10, 15]
+        neuron_values = [32, 64, 128]
+
+        dnn_model.search_hyperparameters(optimizers, batch_sizes, epochs_values, neuron_values)
 
     def change_workers(self):
         self.concurrent_downloads =  int(simpledialog.askstring("Concurrent downloads", "Enter int number (max 20):", parent=self.master))
         self.show_notification(f"Your concurrent downloads has been changed to {self.concurrent_downloads} !")
         
     def extract_features(self):
-        pass
+        dir_to_extract_features_from = simpledialog.askstring("Directory for features extraction", "Enter 'malicious' or 'benign':", parent=self.master)
+        manifest_processor = ManifestProcessor(
+            home_directory=os.path.expanduser("~"),
+            tool_directory="DatasetCreator-ML",
+            manifests_directory="manifests",
+            extracted_csv='found_features_verified_all.csv',
+            extraction_dir=dir_to_extract_features_from
+        )
+
+        manifest_processor.process_manifests()
+        self.show_notification("Static features has been extracted!")
 
     def ask_download_type(self):
         download_type = simpledialog.askstring("Download Type", "Enter 'malicious' or 'benign':", parent=self.master)
@@ -74,8 +118,10 @@ class PrepareApksGUI:
         decompile_dir = simpledialog.askstring("Directory to decompile", "Enter benign or malware: ", parent=self.master)
         if decompile_dir:
             self.decompile_apks(decompile_dir.lower())
+    
 
     def download_files(self, download_type):
+
         apk_downloader = APKDownloader(
             api_key=os.environ['ZooDataSet'],
             concurrent_downloads=self.concurrent_downloads,
@@ -83,12 +129,11 @@ class PrepareApksGUI:
             tool_directory="DatasetCreator-ML"
         )
 
-        self.show_notification(f"Your downloading has been started!")
-
         def update_progress(progress):
             print(f"Progress: {progress:.2f}%")
-            self.progress_bar["value"] = progress
-            self.master.update_idletasks()
+            if progress % 5 == 0:
+                self.progress_bar["value"] = progress
+                self.master.update_idletasks()
         
         apk_downloader.set_progress_callback(update_progress)
 
@@ -109,8 +154,8 @@ class PrepareApksGUI:
 
         def update_progress(progress):
             print(f"Progress: {progress:.2f}%")
-            self.progress_bar["value"] = progress
             if progress % 1 == 0:
+                self.progress_bar["value"] = progress
                 self.master.update_idletasks()
 
         virus_finder.set_progress_callback(update_progress)
