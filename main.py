@@ -63,7 +63,7 @@ class PrepareApksGUI:
     def remove_dirs(self):
         removing_dir = simpledialog.askstring("Directory to delete decompiled folders", "Enter benign or malware: ", parent=self.master)
         if removing_dir:
-            folder_manager = FolderManager(base_path=f'/root/DatasetCreator-ML/{removing_dir}')
+            folder_manager = FolderManager(home_directory=os.path.expanduser("~"), tool_directory='DatasetCreator-ML', base_path=removing_dir)
             folder_manager.delete_unused_decompiled_folders()
         self.show_notification(f'Decompiled dirs has been removed!')
 
@@ -97,7 +97,7 @@ class PrepareApksGUI:
         self.show_notification(f"Your concurrent downloads has been changed to {self.concurrent_downloads} !")
         
     def extract_features(self):
-        dir_to_extract_features_from = simpledialog.askstring("Directory for features extraction", "Enter 'malicious' or 'benign':", parent=self.master)
+        dir_to_extract_features_from = simpledialog.askstring("Directory for features extraction", "Enter 'malware' or 'benign':", parent=self.master)
         manifest_processor = ManifestProcessor(
             home_directory=os.path.expanduser("~"),
             tool_directory="DatasetCreator-ML",
@@ -110,7 +110,7 @@ class PrepareApksGUI:
         self.show_notification("Static features has been extracted!")
 
     def ask_download_type(self):
-        download_type = simpledialog.askstring("Download Type", "Enter 'malicious' or 'benign':", parent=self.master)
+        download_type = simpledialog.askstring("Download Type", "Enter 'malware' or 'benign':", parent=self.master)
         if download_type:
             self.download_files(download_type.lower())
     
@@ -137,12 +137,12 @@ class PrepareApksGUI:
         
         apk_downloader.set_progress_callback(update_progress)
 
-        if download_type == 'malicious':
+        if download_type == 'malware':
             apk_downloader.run(malicious=True, benign=False)
         elif download_type == 'benign':
             apk_downloader.run()
         else:
-            print("Invalid download_type. Please enter 'malicious' or 'benign'.")
+            print("Invalid download_type. Please enter 'malware' or 'benign'.")
             return
 
         self.progress_bar.stop()
