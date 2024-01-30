@@ -20,16 +20,16 @@ class APKDownloader:
 
     def check_files(self):
         if not os.path.exists(os.path.join(self.tool_directory, 'benign_apk_list.txt')):
-            with open(os.path.join(self.tool_directory, 'benign_apk_list.txt'), 'w'):
+            with open(os.path.join(self.tool_directory, 'benign_apk_list.txt'), 'w') as file:
                 pass
         if not os.path.exists(os.path.join(self.tool_directory, 'malware_apk_list.txt')):
-            with open(os.path.join(self.tool_directory, 'malware_apk_list.txt'), 'w'):
+            with open(os.path.join(self.tool_directory, 'malware_apk_list.txt'), 'w') as file:
                 pass
         if not os.path.exists(os.path.join(self.tool_directory, 'benign.txt')):
-            with open(os.path.join(self.tool_directory, 'benign.txt'), 'w'):
+            with open(os.path.join(self.tool_directory, 'benign.txt'), 'w') as file:
                 pass
         if not os.path.exists(os.path.join(self.tool_directory, 'viruses.txt')):
-            with open(os.path.join(self.tool_directory, 'viruses.txt'), 'w'):
+            with open(os.path.join(self.tool_directory, 'viruses.txt'), 'w') as file:
                 pass
 
     def create_lists(self):

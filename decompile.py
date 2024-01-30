@@ -11,6 +11,14 @@ class ApkProcessor:
         self.decompiled_apks_list = os.path.join(tool_directory, decompiled_apks_list)
         
     
+    def check_files(self):
+        if not os.path.exists(self.manifests_dir):
+            with open(self.manifests_dir, 'w ') as file:
+                pass
+        if not os.path.exists(self.decompile_dir):
+            with open(self.decompile_dir, 'w') as file:
+                pass
+
     def decompile_apk(self, apk_file, decompiled_dir):
         try:
             if os.path.exists(decompiled_dir):
