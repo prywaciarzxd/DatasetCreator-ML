@@ -11,28 +11,22 @@ class APKDownloader:
         self.concurrent_downloads = concurrent_downloads
         self.tool_directory = tool_directory
         self.session = requests.Session()  # Now use a session for multiple requests
-        self.check_files()
         self.create_lists()
         self.malware_len = 0
         self.benign_len = 0
         self.last_update_time = time.time()  # Added initialization
         self.load_lengths()
+        
 
-    def check_files(self):
+    def create_lists(self):
+
         if not os.path.exists(os.path.join(self.tool_directory, 'benign_apk_list.txt')):
             with open(os.path.join(self.tool_directory, 'benign_apk_list.txt'), 'w') as file:
                 pass
         if not os.path.exists(os.path.join(self.tool_directory, 'malware_apk_list.txt')):
             with open(os.path.join(self.tool_directory, 'malware_apk_list.txt'), 'w') as file:
                 pass
-        if not os.path.exists(os.path.join(self.tool_directory, 'benign.txt')):
-            with open(os.path.join(self.tool_directory, 'benign.txt'), 'w') as file:
-                pass
-        if not os.path.exists(os.path.join(self.tool_directory, 'viruses.txt')):
-            with open(os.path.join(self.tool_directory, 'viruses.txt'), 'w') as file:
-                pass
-
-    def create_lists(self):
+                
         self.benign_sha256_list = self.read_sha256_from_file(os.path.join(self.tool_directory, 'benign.txt'))
         self.malware_sha256_list = self.read_sha256_from_file(os.path.join(self.tool_directory, 'viruses.txt'))
         self.benign_list_path = self.read_sha256_from_file(os.path.join(self.tool_directory, 'benign_apk_list.txt'))
