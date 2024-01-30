@@ -11,7 +11,7 @@ class APKDownloader:
         self.concurrent_downloads = concurrent_downloads
         self.tool_directory = tool_directory
         self.session = requests.Session()  # Now use a session for multiple requests
-        self.check_dirs()
+        self.check_files()
         self.create_lists()
         self.malware_len = 0
         self.benign_len = 0
