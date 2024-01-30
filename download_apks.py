@@ -16,6 +16,15 @@ class APKDownloader:
         self.benign_len = 0
         self.last_update_time = time.time()  # Added initialization
         self.load_lengths()
+        self.check_dirs()
+
+    def check_dirs(self):
+        if not os.path.exists(os.path.join(self.tool_directory, 'benign_apk_list.txt')):
+            with open(os.path.join(self.tool_directory, 'benign_apk_list.txt'), 'w'):
+                pass
+        if not os.path.exists(os.path.join(self.tool_directory, 'malware_apk_list.txt')):
+            with open(os.path.join(self.tool_directory, 'malware_apk_list.txt'), 'w'):
+                pass
 
     def create_lists(self):
         self.benign_sha256_list = self.read_sha256_from_file(os.path.join(self.tool_directory, 'benign.txt'))
