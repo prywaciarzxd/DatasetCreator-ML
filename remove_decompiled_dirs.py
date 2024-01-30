@@ -5,8 +5,8 @@ import re
 import time
 
 class FolderManager:
-    def __init__(self, home_directory, tool_directory, base_path):
-        self.base_path = os.path.join(home_directory, tool_directory, base_path)
+    def __init__(self, tool_directory, base_path):
+        self.base_path = os.path.join(tool_directory, base_path)
         self.users_choice = base_path
 
     def is_folder_in_use(self, folder_path):

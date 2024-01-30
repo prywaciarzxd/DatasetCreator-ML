@@ -6,10 +6,9 @@ import time
 import argparse
 
 class APKDownloader:
-    def __init__(self, api_key, concurrent_downloads, home_directory, tool_directory):
+    def __init__(self, api_key, concurrent_downloads, tool_directory):
         self.api_key = api_key
         self.concurrent_downloads = concurrent_downloads
-        self.home_directory = home_directory
         self.tool_directory = tool_directory
         self.session = requests.Session()  # Now use a session for multiple requests
         self.create_lists()
@@ -19,10 +18,10 @@ class APKDownloader:
         self.load_lengths()
 
     def create_lists(self):
-        self.benign_sha256_list = self.read_sha256_from_file(os.path.join(self.home_directory, self.tool_directory, 'benign.txt'))
-        self.malware_sha256_list = self.read_sha256_from_file(os.path.join(self.home_directory, self.tool_directory, 'viruses.txt'))
-        self.benign_list_path = self.read_sha256_from_file(os.path.join(self.home_directory, self.tool_directory, 'benign_apk_list.txt'))
-        self.malware_list_path = self.read_sha256_from_file(os.path.join(self.home_directory, self.tool_directory, 'malware_apk_list.txt'))
+        self.benign_sha256_list = self.read_sha256_from_file(os.path.join(self.tool_directory, 'benign.txt'))
+        self.malware_sha256_list = self.read_sha256_from_file(os.path.join(self.tool_directory, 'viruses.txt'))
+        self.benign_list_path = self.read_sha256_from_file(os.path.join(self.tool_directory, 'benign_apk_list.txt'))
+        self.malware_list_path = self.read_sha256_from_file(os.path.join(self.tool_directory, 'malware_apk_list.txt'))
 
     def set_progress_callback(self, callback):
         self.progress_callback = callback
@@ -56,10 +55,10 @@ class APKDownloader:
         url = "https://androzoo.uni.lu/api/download"
 
         if file_type == 'benign':
-            download_path = os.path.join(self.home_directory, self.tool_directory, 'benign', 'benign_')
+            download_path = os.path.join(self.tool_directory, 'benign', 'benign_')
             list_path = self.benign_list_path
         elif file_type == 'malware':
-            download_path = os.path.join(self.home_directory, self.tool_directory, 'malware', 'malware_')
+            download_path = os.path.join(self.tool_directory, 'malware', 'malware_')
             list_path = self.malware_list_path
         else:
             raise ValueError("Invalid file_type provided")

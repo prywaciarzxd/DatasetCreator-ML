@@ -38,9 +38,9 @@ class VirusFinder:
 def parse_arguments_1():
     parser = argparse.ArgumentParser(description='Find viruses in a CSV file.')
     
-    default_input_csv = os.path.join(os.path.expanduser('~'),'DatasetCreator-ML','latest.csv') #Adjust here
-    default_viruses_txt = os.path.join(os.path.expanduser('~'),'DatasetCreator-ML','viruses.txt') #Adjust here
-    default_benign_txt = os.path.join(os.path.expanduser('~'),'DatasetCreator-ML','benign.txt')
+    default_input_csv = os.path.join(os.getcwd(), 'latest.csv') #Adjust here
+    default_viruses_txt = os.path.join(os.getcwd(), 'viruses.txt') #Adjust here
+    default_benign_txt = os.path.join(os.getcwd(), 'benign.txt')
 
     parser.add_argument('--input_csv', type=str, default=default_input_csv,
                         help=f'Path to the input CSV file, default={default_input_csv}')
@@ -49,6 +49,8 @@ def parse_arguments_1():
     parser.add_argument('--benign_txt', type=str, default=default_benign_txt,
                         help=f'Path to the output text file, default={default_benign_txt}')
     
+    print(default_input_csv, default_benign_txt)
+
     if not os.path.exists(default_viruses_txt):
         with open(default_viruses_txt, 'w') as file:
             pass

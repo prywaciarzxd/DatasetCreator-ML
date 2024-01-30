@@ -4,12 +4,11 @@ import shutil
 import time
 
 class ApkProcessor:
-    def __init__(self, home_directory, tool_directory, manifests_dir, decompile_dir, decompiled_apks_list):
-        self.home_directory = home_directory
+    def __init__(self, tool_directory, manifests_dir, decompile_dir, decompiled_apks_list):
         self.tool_directory = tool_directory
-        self.manifests_dir = os.path.join(home_directory, tool_directory, manifests_dir)
-        self.decompile_dir = os.path.join(home_directory, tool_directory, decompile_dir)
-        self.decompiled_apks_list = os.path.join(home_directory, tool_directory, decompiled_apks_list)
+        self.manifests_dir = os.path.join(tool_directory, manifests_dir)
+        self.decompile_dir = os.path.join(tool_directory, decompile_dir)
+        self.decompiled_apks_list = os.path.join(tool_directory, decompiled_apks_list)
         
     
     def decompile_apk(self, apk_file, decompiled_dir):

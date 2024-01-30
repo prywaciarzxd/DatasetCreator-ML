@@ -59,11 +59,12 @@ class PrepareApksGUI:
         self.progress_bar.pack(pady=10)
 
         self.concurrent_downloads = 1
+        self.current_directory = os.getcwd()
     
     def remove_dirs(self):
         removing_dir = simpledialog.askstring("Directory to delete decompiled folders", "Enter benign or malware: ", parent=self.master)
         if removing_dir:
-            folder_manager = FolderManager(home_directory=os.path.expanduser("~"), tool_directory='DatasetCreator-ML', base_path=removing_dir)
+            folder_manager = FolderManager(tool_directory=os.getcwd(), base_path=removing_dir)
             folder_manager.delete_unused_decompiled_folders()
         self.show_notification(f'Decompiled dirs has been removed!')
 
@@ -99,8 +100,7 @@ class PrepareApksGUI:
     def extract_features(self):
         dir_to_extract_features_from = simpledialog.askstring("Directory for features extraction", "Enter 'malware' or 'benign':", parent=self.master)
         manifest_processor = ManifestProcessor(
-            home_directory=os.path.expanduser("~"),
-            tool_directory="DatasetCreator-ML",
+            tool_directory=os.getcwd(),
             manifests_directory="manifests",
             extracted_csv='found_features_verified_all.csv',
             extraction_dir=dir_to_extract_features_from
@@ -125,8 +125,7 @@ class PrepareApksGUI:
         apk_downloader = APKDownloader(
             api_key=os.environ['ZooDataSet'],
             concurrent_downloads=self.concurrent_downloads,
-            home_directory=os.path.expanduser("~"),
-            tool_directory="DatasetCreator-ML"
+            tool_directory=os.getcwd()
         )
 
         def update_progress(progress):
@@ -189,8 +188,7 @@ class PrepareApksGUI:
 
     def decompile_apks(self, decompile_dir):
         apk_processor = ApkProcessor(
-        home_directory=os.path.expanduser("~"),
-        tool_directory='DatasetCreator-ML',
+        tool_directory=os.getcwd(),
         manifests_dir="manifests",
         decompile_dir=decompile_dir,
         decompiled_apks_list="decompiled_apks.txt"
