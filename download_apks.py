@@ -11,19 +11,25 @@ class APKDownloader:
         self.concurrent_downloads = concurrent_downloads
         self.tool_directory = tool_directory
         self.session = requests.Session()  # Now use a session for multiple requests
+        self.check_dirs()
         self.create_lists()
         self.malware_len = 0
         self.benign_len = 0
         self.last_update_time = time.time()  # Added initialization
         self.load_lengths()
-        self.check_dirs()
 
-    def check_dirs(self):
+    def check_files(self):
         if not os.path.exists(os.path.join(self.tool_directory, 'benign_apk_list.txt')):
             with open(os.path.join(self.tool_directory, 'benign_apk_list.txt'), 'w'):
                 pass
         if not os.path.exists(os.path.join(self.tool_directory, 'malware_apk_list.txt')):
             with open(os.path.join(self.tool_directory, 'malware_apk_list.txt'), 'w'):
+                pass
+        if not os.path.exists(os.path.join(self.tool_directory, 'benign.txt')):
+            with open(os.path.join(self.tool_directory, 'benign.txt'), 'w'):
+                pass
+        if not os.path.exists(os.path.join(self.tool_directory, 'viruses.txt')):
+            with open(os.path.join(self.tool_directory, 'viruses.txt'), 'w'):
                 pass
 
     def create_lists(self):
