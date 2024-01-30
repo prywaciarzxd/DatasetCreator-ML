@@ -9,6 +9,7 @@ class ApkProcessor:
         self.manifests_dir = os.path.join(tool_directory, manifests_dir)
         self.decompile_dir = os.path.join(tool_directory, decompile_dir)
         self.decompiled_apks_list = os.path.join(tool_directory, decompiled_apks_list)
+        self.check_files()
         
     
     def check_files(self):
