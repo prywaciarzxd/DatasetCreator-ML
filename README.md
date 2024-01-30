@@ -1,50 +1,61 @@
-DatasetCreator-ML
+# Dataset Creator
 
-This repository contains scripts designed to create datasets using AndroZoo in conjunction with machine learning algorithms.
-Installation Guide
+## Prerequisites
+Before running the program, make sure you have the following prerequisites:
 
-    Clone the repository:
+1. **Latest CSV File**: Download the latest CSV file from [Androzoo](https://androzoo.uni.lu/lists) (e.g., `latest.csv`) and place it in the `/root/DatasetCreator-ML` directory.
 
-    bash
-    
-    git clone https://github.com/prywaciarzxd/DatasetCreator-ML.git
+2. **API Key from AndrozooDataset**: Obtain an API key from AndrozooDataset to enable downloading. You can get the API key [here](https://androzoo.uni.lu/documentation#section/Obtaining-the-API-key). Set the API key as an environment variable:
 
+    ```bash
+    export ZooDataSet=YOUR_API_KEY
+    ```
+3. **Java 8 and apktool**: To decompile apk files we use apktool which requires min java 8 installed.
 
+4. **Python Libraries**: Scikit-learn, tensorflow.
+   > Note: You can also set the API key in the GUI by clicking on "Enter your API key."
 
-Navigate to the cloned directory:
+## Running the Program
+1. Clone or place the entire project in the `/root/DatasetCreator-ML` directory.
 
-    bash
+    ```bash
+    git clone https://github.com/YOUR_USERNAME/DatasetCreator-ML.git
+    ```
 
-    cd DatasetCreator-ML
+2. Open the terminal and navigate to the project directory:
 
-Execute script to find viruses and generate a CSV file:
+    ```bash
+    cd /root/DatasetCreator-ML
+    ```
 
-    python find_viruses_csv.py --input_csv --output_txt
+3. Run the program using the following command:
 
-Download APKs using the generated text file list (you will need to add API_KEY in this file):
+    ```bash
+    python main.py
+    ```
 
-    python download_apks.py [options: --malware, --benign] 
+4. Optionally, set the API key through the GUI by clicking on "Enter your API key."
 
-Run a script to check and execute the decompiling process:
+## Program Functions
 
-    python check_script.py
+### `find_specific_files_from_csv`
+This function allows you to create files containing viruses or applications, depending on your preferences. It processes the CSV file and extracts the specified files.
 
-Extract features such as permissions and intents:
+### `download_files`
+Initiates the downloading process based on the created lists. Specify whether you want to download malicious or benign applications.
 
-    python extract_features
+### `change_number_of_downloads`
+Change the number of parallel downloads to control the download speed and system resource utilization.
 
-You can train using dnn model by typing
-    
-    python dnn.py
+### `decompile_apks`
+Decompile the downloaded APK files using apktool. Specify whether you want to decompile benign or malware applications.
 
-Module Explanation
+### `remove_dirs`
+Removes decompiled directories based on the specified category (benign or malware).
 
-    find_viruses_csv.py: Searches for files with a score higher than 25, classified as malware. You can adjust it to find benign files.
-    download_apks.py: Downloads files from a text file list.
-    check_script.py: Executes the decompiling script.
-    extract_features: Extracts permissions and intents from APK files.
+### `extract_features`
+This function is a placeholder for extracting static features from the decompiled APKs.
 
-Customization Notes
+> **Note:** You can conveniently set the environment variable using the GUI by clicking on "Enter your API key."
 
-    In download_apks.py, you can modify the number of files being downloaded to a maximum of 20 per user.
-    In thebest.py, you can adjust the number of threats used for the decompiling process.
+Please ensure that all files and the program are located in the `/root/DatasetCreator-ML` directory for proper functionality.
