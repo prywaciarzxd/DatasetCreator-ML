@@ -14,11 +14,9 @@ class ApkProcessor:
     
     def check_files(self):
         if not os.path.exists(self.manifests_dir):
-            with open(self.manifests_dir, 'w ') as file:
-                pass
+            os.makedirs(self.manifests_dir)
         if not os.path.exists(self.decompile_dir):
-            with open(self.decompile_dir, 'w') as file:
-                pass
+            os.makedirs(self.decompile_dir)
 
     def decompile_apk(self, apk_file, decompiled_dir):
         try:
