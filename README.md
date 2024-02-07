@@ -36,6 +36,10 @@ Before running the program, make sure you have the following prerequisites:
 
 4. Optionally, set the API key through the GUI by clicking on "Enter your API key."
 
+## Optional functionality
+
+U can run in in CLI version definetely faster, parrarel downloading apks, decompiling etc. Here is the link: https://github.com/prywaciarzxd/DataSetCreator-ML-CLI
+
 ## Program Functions
 
 ### `find_specific_files_from_csv`
