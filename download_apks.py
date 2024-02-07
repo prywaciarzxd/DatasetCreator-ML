@@ -26,6 +26,12 @@ class APKDownloader:
         if not os.path.exists(os.path.join(self.tool_directory, 'malware_apk_list.txt')):
             with open(os.path.join(self.tool_directory, 'malware_apk_list.txt'), 'w') as file:
                 pass
+
+        if not os.path.exists(os.path.join(self.tool_directory, 'benign')):
+            os.makedirs(os.path.join(self.tool_directory, 'benign'))
+
+        if not os.path.exists(os.path.join(self.tool_directory, 'malware')):
+            os.makedirs(os.path.join(self.tool_directory, 'malware'))
                 
         self.benign_sha256_list = self.read_sha256_from_file(os.path.join(self.tool_directory, 'benign.txt'))
         self.malware_sha256_list = self.read_sha256_from_file(os.path.join(self.tool_directory, 'viruses.txt'))
