@@ -10,6 +10,7 @@ Before running the program, make sure you have the following prerequisites:
     ```bash
     export ZooDataSet=YOUR_API_KEY
     ```
+
 3. **Java 8 and apktool**: To decompile apk files we use apktool which requires min java 8 installed.
 
 4. **Python Libraries**: Scikit-learn, tensorflow.
@@ -36,9 +37,8 @@ Before running the program, make sure you have the following prerequisites:
 
 4. Optionally, set the API key through the GUI by clicking on "Enter your API key."
 
-## Optional functionality
-
-U can run in in CLI version definetely faster, parrarel downloading apks, decompiling etc. Here is the link: https://github.com/prywaciarzxd/DataSetCreator-ML-CLI
+## Optional Functionality
+Enhance performance by utilizing the Command-Line Interface (CLI) version. This version enables faster execution through parallel downloading of APKs and decompilation. Access the CLI version [here](https://github.com/prywaciarzxd/DataSetCreator-ML-CLI).
 
 ## Program Functions
 
