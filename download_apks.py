@@ -136,6 +136,13 @@ class APKDownloader:
 
         return sha256_list
 
+    def read_sha256(self, file_path):
+        read_sha256_list = list()
+        with open(file_path, 'r') as file:
+            for line in file:
+                read_sha256_list.append(line.strip())  # Strip to remove any leading/trailing whitespaces
+        return read_sha256_list
+
     def run(self, malicious=False, benign=True):
         if benign:
             sha256_list = self.benign_sha256_list
